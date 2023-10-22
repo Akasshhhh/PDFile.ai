@@ -9,3 +9,6 @@ export default {
         connectionString: process.env.DATABASE_URL!,
     }
 } satisfies Config 
+
+//npx drizzle-kit push:pg 
+//this command will push our db to neon
