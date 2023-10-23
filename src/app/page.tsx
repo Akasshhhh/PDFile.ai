@@ -3,7 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
-import {LogInIcon} from "lucide-react";
+import { LogInIcon } from "lucide-react";
 import UploadFile from "@/components/UploadFile";
 
 const Home = async () => {
@@ -34,11 +34,11 @@ const Home = async () => {
 
           <div className="w-full mt-4">
             {
-              isAuth?(<UploadFile />):(<Link href="/sign-in">
+              isAuth ? (<UploadFile />) : (<Link href="/sign-in">
                 <Button className=" text-slate-200">
                   Login to get Started!
-                  <LogInIcon className="w-5 h-5 ml-2"/>
-                  </Button>
+                  <LogInIcon className="w-5 h-5 ml-2" />
+                </Button>
               </Link>)
             }
           </div>

@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
+
 export const metadata: Metadata = {
   title: 'ChatPDF',
 }
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body suppressHydrationWarning className={inter.className}>{children}</body>
     </html>
     </ClerkProvider>
   )
