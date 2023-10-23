@@ -1,5 +1,5 @@
+"use server";
 import AWS from "aws-sdk";
-
 
 export async function uploadToS3(file: File) {
   try {
@@ -9,7 +9,7 @@ export async function uploadToS3(file: File) {
     });
     const s3 = new AWS.S3({
       params: {
-        Bucket: process.env.AWS_S3_BUCKET_NAME!,
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
       },
       region: "ap-south-1",
     });
@@ -42,9 +42,4 @@ export async function uploadToS3(file: File) {
     console.error(error);
     return Promise.reject(error);
   }
-}
-
-export function getS3Url(fileKey: string) {
-  const url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/${fileKey}`;
-  return url;
 }
