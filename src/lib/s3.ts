@@ -4,21 +4,21 @@ import AWS from "aws-sdk";
 export async function uploadToS3(file: File) {
   try {
     AWS.config.update({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
     });
     const s3 = new AWS.S3({
       params: {
-        Bucket: process.env.AWS_S3_BUCKET_NAME!,
+        Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME!,
       },
       region: "ap-south-1",
     });
 
     const fileKey =
-      "uploads/" + Date.now().toString() + file.name.replace(" ", "-");
+      "uploads/" + Date.now().toString() + file.name.replace(' ', '-');
 
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME!,
       Key: fileKey,
       Body: file,
     };
@@ -30,7 +30,7 @@ export async function uploadToS3(file: File) {
       })
       .promise();
 
-    await upload.then((data) => {
+    await upload.then(data => {
       console.log("Successfully uploaded to S3", fileKey);
     });
 
@@ -40,7 +40,6 @@ export async function uploadToS3(file: File) {
     });
   } catch (error) {
     console.error(error);
-    return Promise.reject(error);
   }
 }
 
