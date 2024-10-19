@@ -5,10 +5,12 @@ import React, { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import {toast} from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 
 const UploadFile = () => {
+  const router = useRouter()
   const [uploading, setUploading] = useState(false)
   //mutation is a function that allows you to hit the backend API
   const { mutate, isPending } = useMutation({
@@ -31,17 +33,18 @@ const UploadFile = () => {
       try {
         setUploading(true)
         const data = await uploadToS3(file)
-        if(!data?.fileKey || !data.file_name){
+        if (!data?.fileKey || !data.file_name) {
           toast.error("Something went wrong")
           return
         }
         mutate(data, {
-          onSuccess: (data)=>{
-            console.log(data)
-            toast.success(data.message)
+          onSuccess: ({ chat_id }) => {
+            toast.success("Chat created!")
+            router.push(`/chat/${chat_id}`)
           },
-          onError: (err) =>{
+          onError: (err) => {
             toast.error("Error creating chat")
+            console.error(err)
           }
         })
         console.log(data)
@@ -58,12 +61,12 @@ const UploadFile = () => {
         className: " border-dashed border-2 rounded-xl cursor-pointer bg-gray-400 py-12 "
       })} >
         <input {...getInputProps()} />
-        {(uploading || isPending)?(<>
-        <div className='flex justify-center'>
-        <Loader2 className='h-10 w-10 animate-spin' />
-        </div>
-        <p className='mt-2  text-slate-300 font-medium text-lg'>Spilling tea to GPT...</p>
-        </>):(
+        {(uploading || isPending) ? (<>
+          <div className='flex justify-center'>
+            <Loader2 className='h-10 w-10 animate-spin' />
+          </div>
+          <p className='mt-2  text-slate-300 font-medium text-lg'>Spilling tea to GPT...</p>
+        </>) : (
           <div className='flex justify-center items-center flex-col'>
             <Inbox className='w-10 h-10 ' />
             <p className='mt-2 font-medium text-lg'>Drop Files here</p>

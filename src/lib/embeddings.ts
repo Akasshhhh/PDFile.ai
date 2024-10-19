@@ -8,11 +8,11 @@ const openai = new OpenAIApi(config)
 
 export async function getEmbeddings(text: string){
     try {
-        const respone = await openai.createEmbedding({
+        const response = await openai.createEmbedding({
             model: 'text-embedding-ada-002',
             input: text.replace(/\n/g, '')
         })
-        const result = await respone.json()
+        const result = await response.json()
         return result.data[0].embedding as number[]
     } catch (error) {
         console.log("Unable to fetch OpenAi Embeddings",error)

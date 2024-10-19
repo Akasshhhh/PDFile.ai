@@ -12,3 +12,4 @@ export default {
 
 //npx drizzle-kit push:pg 
 //this command will push our db to neon
+//npx drizzle-kit studio for local db preview

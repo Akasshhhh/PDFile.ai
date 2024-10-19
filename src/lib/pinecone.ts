@@ -4,12 +4,19 @@ import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { Document, RecursiveCharacterTextSplitter} from "@pinecone-database/doc-splitter"
 import { getEmbeddings } from "./embeddings";
 import md5 from "md5"
+import { convertToAscii } from "./utils";
  
 //Things we need to do for AI RAG
 //1. Obtain the Pdf
 //2. Split and segment the pdf
-//3. Vectorise and embed similar documents
+//3. Vectorise and embed individual documents
 //4. Store the vectors into pinecone
+
+//Search
+//5.Embed the query 
+//6.Query the pineconedb for similar vectors
+//7.Extract out the metadata for similar vectors
+//8.Feed metadata into openAi prompt
 
 let pinecone : Pinecone | null = null;
 
@@ -37,7 +44,7 @@ export async function loadS3IntoPinecone(fileKey: string){
     if(!file_name){
         throw new Error("could not download from s3")
     }
-
+    console.log(file_name)
     //1.1.Install and use langchain so that it can read the text inside our pdf file
     const loader = new PDFLoader(file_name)
     const pages = (await loader.load()) as PDFPage[]
@@ -51,10 +58,10 @@ export async function loadS3IntoPinecone(fileKey: string){
     //4. Upload to Pinecone
     const client = await getPineconeClient()
     const pineconeIndex = client.Index('pdfile-ai') //Index means DB of pinecone
-
+    const namespace = convertToAscii(fileKey)
     console.log("Inserting vectors into pinecone")
-    pineconeIndex.upsert(vectors)
-
+    // pineconeIndex.upsert(vectors)
+    await pineconeIndex.namespace(namespace).upsert(vectors)
     return documents[0]
 }
 
@@ -86,7 +93,7 @@ export const truncateStringBytes = (str: string, bytes: number) =>{
 export async function prepareDocuments(page: PDFPage){
     let {pageContent, metadata} = page
     pageContent = pageContent.replace(/\n/g, '')//regex to replace all the new line characters with the empty string
-    //split the doc
+    //split the doc and segment it into smaller chunks
     const splitter = new RecursiveCharacterTextSplitter()
     const docs = await splitter.splitDocuments([
         new Document({

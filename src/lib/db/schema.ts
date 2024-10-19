@@ -12,7 +12,7 @@ export const chats = pgTable('chats',{
     userId: varchar('user_id', {length:256}).notNull(),//clerk userId
     fileKey: text('file_key').notNull()//when we are retrieving the file from S3
 })
-
+export type DrizzleChat = typeof chats.$inferSelect
 export const messages = pgTable('messages',{
     id: serial('id').primaryKey(),
     chatId: integer('chat_id').references(()=>chats.id /*this is a callback function*/).notNull(),
