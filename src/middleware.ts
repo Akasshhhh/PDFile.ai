@@ -5,7 +5,7 @@ import { authMiddleware } from "@clerk/nextjs";
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
 export default authMiddleware({
     //This array of public routes are the pages we do not need login for 
-    publicRoutes: ["/"]
+    publicRoutes: ["/",'/api/webhook']
 });
  
 export const config = {
