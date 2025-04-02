@@ -27,28 +27,31 @@ const ChatComponent = ({chatId}: Props) => {
         initialMessages: data || []
     })
 
-    useEffect(()=>{
-        const messageContainer = document.getElementById('message-container')
-        if(messageContainer){
+    useEffect(() => {
+        const messageContainer = document.getElementById('message-list')
+        if (messageContainer) {
             messageContainer.scrollTo({
                 top: messageContainer.scrollHeight,
                 behavior: "smooth"
             })
         }
-    },[messages])
+    }, [messages])
+
     return (
-        <div className=' relative max-h-screen overflow-scroll' id='message-container'>
-            <div className='sticky top-0 inset-x-0 bg-white h-fit'>
+        <div className='relative h-screen flex flex-col'>
+            <div className='sticky top-0 inset-x-0 bg-white h-fit p-2 shadow-sm'>
                 <h3 className='text-xl font-bold'>Chat</h3>
             </div>
+
             {/* message list */}
-            <MessageList messages={messages} />
+            <div className='flex-1 overflow-y-auto pb-4 ' id='message-list'>
+                <MessageList messages={messages} />
+            </div>
 
-            <form onSubmit={handleSubmit} className='sticky bottom-0 inset-x-0 px-2 py-4 bg-white'>
+            <form onSubmit={handleSubmit} className='sticky bottom-0 inset-x-0 px-2 py-4 bg-white '>
                 <div className='flex'>
-
                     <Input value={input} onChange={handleInputChange} placeholder='Ask any question?' className='w-full' />
-                    <Button className=' bg-blue-600 ml-2'>
+                    <Button className='bg-blue-600 ml-2'>
                         <Send className='h-4 w-4' />
                     </Button>
                 </div>

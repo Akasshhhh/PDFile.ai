@@ -1,29 +1,31 @@
-import { PineconeClient } from "@pinecone-database/pinecone";
+import { Pinecone } from "@pinecone-database/pinecone";
 import { convertToAscii } from "./utils";
 import { getEmbeddings } from "./embeddings";
 
-export async function getMatchesFromEmbeddings(embeddings: number[], fileKey: string){
-    const pinecone = new PineconeClient()
-    await pinecone.init({
-        apiKey: process.env.PINECONE_API_KEY!,
-        environment: process.env.PINECONE_ENVIRONMENT!
-    })
-    const index = await pinecone.Index('pdfile-ai')
+export async function getMatchesFromEmbeddings(embeddings: number[], fileKey: string) {
+    // Create Pinecone client with direct initialization
+    const pinecone = new Pinecone({
+        apiKey: process.env.PINECONE_API_KEY!
+    });
+    
+    // Get the index directly
+    const index = pinecone.Index('pdfile-ai');
+    
+    // Convert fileKey to ASCII for namespace
+    const namespace = convertToAscii(fileKey);
 
     try {
-        const namespace = convertToAscii(fileKey)
-        const queryResult = await index.query({
-            queryRequest: {
-                topK: 5, //returns the 5 most similar vector to the query
-                vector: embeddings,
-                includeMetadata: true,
-                namespace
-            }
-        })
-        return queryResult.matches || []
+        // Using the namespace method as shown in latest docs
+        const queryResult = await index.namespace(namespace).query({
+            vector: embeddings,
+            topK: 5, //returns the 5 most similar vector to the query
+            includeMetadata: true
+        });
+        
+        return queryResult.matches || [];
     } catch (error) {
-        console.log('Error querying embeddings ', error)
-        throw error
+        console.log('Error querying embeddings ', error);
+        throw error;
     }
 }
 

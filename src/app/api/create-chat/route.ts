@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 // /api/create-chat
 
 import { db } from "@/lib/db";

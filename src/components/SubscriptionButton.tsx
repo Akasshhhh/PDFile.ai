@@ -3,9 +3,12 @@ import React from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 
-type Props = { isPro: boolean };
+type Props = { 
+  isPro: boolean;
+  className?: string;
+};
 
-const SubscriptionButton = (props: Props) => {
+const SubscriptionButton = ({ isPro, className }: Props) => {
   const [loading, setLoading] = React.useState(false);
   const handleSubscription = async () => {
     try {
@@ -19,8 +22,12 @@ const SubscriptionButton = (props: Props) => {
     }
   };
   return (
-    <Button disabled={loading} onClick={handleSubscription} >
-      {props.isPro ? "Manage Subscriptions" : "Get Pro"}
+    <Button 
+      disabled={loading} 
+      onClick={handleSubscription}
+      className={className}
+    >
+      {isPro ? "Manage Subscriptions" : "Get Pro"}
     </Button>
   );
 };

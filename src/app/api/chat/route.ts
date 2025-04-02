@@ -6,7 +6,7 @@ import { chats, messages as _messages } from "@/lib/db/schema";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 
-export const runtime = "edge";
+export const runtime = 'nodejs';
 
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   
   
       const response = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages: [
           prompt,
           ...messages.filter((message: Message) => message.role === "user"),
